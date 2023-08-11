@@ -175,7 +175,9 @@ const LoginScreen = ({ onLayoutRootView }) => {
                 <Text style={button}>Зареєстуватися</Text>
               </TouchableOpacity>
               <TouchableOpacity style={buttonAuth}>
-                <Text style={[button, lastButton]}>Вже є акаунт? Увійти</Text>
+                <Text style={[button, lastButton]}>
+                  Немає акаунту? Зареєструватися
+                </Text>
               </TouchableOpacity>
             </View>
           )}

@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
   },
   wrapperAuthInput: {
     width: "100%",
-    gap: 16,
 
     flexDirection: "column",
     alignItems: "center",
@@ -72,12 +71,12 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     padding: 16,
+    marginBottom: 16,
 
     color: "#212121",
     backgroundColor: "#f6f6f6",
 
     borderWidth: 1,
-    borderColor: "#e8e8e8",
     borderRadius: 8,
 
     fontFamily: "Roboto",
