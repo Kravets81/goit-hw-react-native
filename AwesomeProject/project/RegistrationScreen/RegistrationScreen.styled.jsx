@@ -12,6 +12,17 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
   },
 
+  bgImg: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+
   wrapper: {
     position: "relative",
     marginTop: "auto",
@@ -40,23 +51,71 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  userPhoto: {
+  avatarWrapper: {
     position: "absolute",
     top: -60,
+    alignSelf: "center",
 
     width: 120,
     height: 120,
+
+    backgroundColor: "#f6f6f6",
     borderRadius: 16,
 
     backgroundColor: "#F6F6F6",
+    zIndex: 1,
   },
 
-  iconAdd: {
+  avatarUser: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+  },
+
+  btnAddAvatar: {
     position: "absolute",
+    bottom: 14,
+    right: -12.5,
+
+    alignItems: "center",
+    alignContent: "center",
+
     width: 25,
     height: 25,
-    bottom: 15,
-    right: -12,
+
+    color: "#ff6c00",
+    backgroundColor: "#ffffff",
+    borderRadius: 50,
+  },
+
+  btnAddAvatarLoad: {
+    position: "absolute",
+    bottom: 14,
+    right: -12.5,
+
+    alignItems: "center",
+    alignContent: "center",
+
+    width: 25,
+    height: 25,
+
+    color: "#ff6c00",
+    backgroundColor: "#ffffff",
+    borderRadius: 50,
+
+    transform: [{ rotate: "45deg" }],
+  },
+
+  btnAddAvatarSvg: {
+    fill: "#ff6c00",
+    stroke: "#ff6c00",
+    backgroundColor: "#ffffff",
+  },
+
+  btnAddAvatarSvgLoad: {
+    fill: "#bdbdbd",
+    stroke: "#e8e8e8",
+    backgroundColor: "#ffffff",
   },
 
   title: {
@@ -137,17 +196,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
 
-  bgImg: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-
   button: {
     alignItems: "center",
     textAlign: "center",
@@ -183,8 +231,8 @@ export const {
   wrapper,
   wrapperAuthInput,
   keyboardAvoidingContainer,
-  userPhoto,
-  iconAdd,
+  avatarUser,
+  avatarWrapper,
   title,
   input,
   lastInput,
@@ -195,4 +243,8 @@ export const {
   lastButton,
   buttonWrapper,
   buttonAuth,
+  btnAddAvatar,
+  btnAddAvatarLoad,
+  btnAddAvatarSvg,
+  btnAddAvatarSvgLoad,
 } = styles;

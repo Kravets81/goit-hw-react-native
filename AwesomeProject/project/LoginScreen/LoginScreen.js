@@ -4,16 +4,13 @@ import { useState } from "react";
 
 import {
   ImageBackground,
-  StyleSheet,
   TextInput,
   View,
   TouchableOpacity,
   Text,
   KeyboardAvoidingView,
-  Image,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
 } from "react-native";
 
 import {
@@ -21,8 +18,6 @@ import {
   wrapper,
   wrapperAuthInput,
   keyboardAvoidingContainer,
-  userPhoto,
-  iconAdd,
   title,
   input,
   lastInput,
@@ -48,6 +43,8 @@ const LoginScreen = ({ onLayoutRootView }) => {
 
   const [state, setState] = useState(initialState);
 
+  const { emailAddress, password } = state;
+
   const [isFocusInput, setIsFocusInput] = useState({
     username: false,
     emailAddress: false,
@@ -66,15 +63,34 @@ const LoginScreen = ({ onLayoutRootView }) => {
     Keyboard.dismiss();
   };
 
+  const clearUserForm = () => {
+    setState((prevState) => ({ ...prevState, emailAddress: "", password: "" }));
+  };
+
+  handleSubmitUserLogin = (initialState) => {
+    if (!emailAddress.trim() || !password.trim()) {
+      console.log("Будь ласка заповніть поля");
+      return;
+    }
+
+    if (!emailAddress.includes("@")) {
+      console.log("Адрес електронної пошти повинен містити символ '@'");
+      return;
+    }
+
+    console.log(`emailAddress:${emailAddress}, password: ${password} `);
+    clearUserForm();
+  };
+
   return (
-    <View onLayout={onLayoutRootView} style={container}>
-      <ImageBackground source={backgroundImg} style={bgImg}>
-        <View style={wrapper}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={keyboardAvoidingContainer}
-          >
-            <TouchableWithoutFeedback onPress={handleKeyboardHide}>
+    <TouchableWithoutFeedback onPress={handleKeyboardHide}>
+      <View onLayout={onLayoutRootView} style={container}>
+        <ImageBackground source={backgroundImg} style={bgImg}>
+          <View style={wrapper}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={keyboardAvoidingContainer}
+            >
               <View style={wrapperAuthInput}>
                 <Text style={title} allowFontScaling={false}>
                   Увійти
@@ -93,9 +109,10 @@ const LoginScreen = ({ onLayoutRootView }) => {
                   }}
                   keyboardType="email-address"
                   textContentType="emailAddress"
-                  value={state.emailAddress}
+                  autoComplete="email"
+                  value={emailAddress}
                   onFocus={() => {
-                    handleFocus,
+                    handleFocus(),
                       setIsShowKeyboard(true),
                       setIsFocusInput({
                         ...isFocusInput,
@@ -129,7 +146,7 @@ const LoginScreen = ({ onLayoutRootView }) => {
                       ...passInput,
                     }}
                     textContentType="password"
-                    value={state.password}
+                    value={password}
                     secureTextEntry={isShowPassword}
                     onFocus={() => {
                       handleFocus();
@@ -166,24 +183,27 @@ const LoginScreen = ({ onLayoutRootView }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
 
-          {!isShowKeyboard && (
-            <View style={buttonWrapper}>
-              <TouchableOpacity style={buttonAuth}>
-                <Text style={button}>Зареєстуватися</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={buttonAuth}>
-                <Text style={[button, lastButton]}>
-                  Немає акаунту? Зареєструватися
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      </ImageBackground>
-    </View>
+              {!isShowKeyboard && (
+                <View style={buttonWrapper}>
+                  <TouchableOpacity
+                    style={buttonAuth}
+                    onPress={handleSubmitUserLogin}
+                  >
+                    <Text style={button}>Зареєстуватися</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={buttonAuth}>
+                    <Text style={[button, lastButton]}>
+                      Немає акаунту? Зареєструватися
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </KeyboardAvoidingView>
+          </View>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

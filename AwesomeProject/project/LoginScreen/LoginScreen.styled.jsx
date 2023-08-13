@@ -35,24 +35,6 @@ const styles = StyleSheet.create({
   keyboardAvoidingContainer: {
     width: "100%",
   },
-  userPhoto: {
-    position: "absolute",
-    top: -60,
-
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-
-    backgroundColor: "#F6F6F6",
-  },
-
-  iconAdd: {
-    position: "absolute",
-    width: 25,
-    height: 25,
-    bottom: 15,
-    right: -12,
-  },
 
   title: {
     fontFamily: "Roboto-Bold",
@@ -171,8 +153,6 @@ export const {
   wrapper,
   wrapperAuthInput,
   keyboardAvoidingContainer,
-  userPhoto,
-  iconAdd,
   title,
   input,
   lastInput,

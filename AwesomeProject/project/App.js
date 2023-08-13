@@ -28,8 +28,8 @@ export default function App() {
     // <View onLayout={onLayoutRootView}>
     //   <StatusBar style="auto" />
     //   <Text>Open up App.js to start working on your app!</Text>
-    // <RegistrationScreen onLayout={onLayoutRootView} />
-    <LoginScreen onLayout={onLayoutRootView} />
+    <RegistrationScreen onLayout={onLayoutRootView} />
+    // <LoginScreen onLayout={onLayoutRootView} />
     // </View>
   );
 }

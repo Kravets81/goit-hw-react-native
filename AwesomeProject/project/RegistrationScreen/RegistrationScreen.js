@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useState } from "react";
+import * as DocumentPicker from "expo-document-picker";
 
 import {
   ImageBackground,
@@ -19,8 +20,8 @@ import {
   wrapper,
   wrapperAuthInput,
   keyboardAvoidingContainer,
-  userPhoto,
-  iconAdd,
+  avatarUser,
+  avatarWrapper,
   title,
   input,
   lastInput,
@@ -31,9 +32,14 @@ import {
   lastButton,
   buttonWrapper,
   buttonAuth,
+  btnAddAvatar,
+  btnAddAvatarLoad,
+  btnAddAvatarSvg,
+  btnAddAvatarSvgLoad,
 } from "../RegistrationScreen/RegistrationScreen.styled";
 
 import backgroundImg from "../assets/img/PhotoBG.jpg";
+import SvgAddButton from "../assets/svg/SvgAddButton";
 
 const initialState = {
   username: "",
@@ -42,9 +48,9 @@ const initialState = {
 };
 
 const RegistrationScreen = ({ onLayoutRootView }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-
   const [state, setState] = useState(initialState);
+
+  const { username, emailAddress, password } = state;
 
   const [isFocusInput, setIsFocusInput] = useState({
     username: false,
@@ -52,8 +58,13 @@ const RegistrationScreen = ({ onLayoutRootView }) => {
     password: false,
   });
 
-  const [isShowPassword, setIsShowPassword] = useState(true);
   const [isFocusView, setIsFocusView] = useState(false);
+
+  const [avatar, setAvatar] = useState(null);
+
+  const [isShowPassword, setIsShowPassword] = useState(true);
+
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const handleFocus = () => {
     setIsShowKeyboard(true);
@@ -64,21 +75,76 @@ const RegistrationScreen = ({ onLayoutRootView }) => {
     Keyboard.dismiss();
   };
 
+  const cleanRegisterForm = () => {
+    setState((prevState) => ({
+      ...prevState,
+      username: "",
+      emailAddress: "",
+      password: "",
+    }));
+  };
+
+  const handleSubmitUserRegister = (initialState) => {
+    if (!username.trim() || !emailAddress.trim() || !password.trim()) {
+      console.log("Будь ласка заповніть поля");
+      return;
+    }
+
+    if (!emailAddress.includes("@")) {
+      console.log("Адрес електронної пошти повинен містити символ '@'");
+      return;
+    }
+    console.log(
+      `username: ${username}, emailAddress: ${emailAddress}, password: ${password}`
+    );
+    cleanRegisterForm();
+  };
+
+  const onLoadAvatar = async () => {
+    console.log("onLoadAvatar started");
+    try {
+      const avatarImg = await DocumentPicker.getDocumentAsync({
+        type: "image/*",
+      });
+
+      console.log("avatarImg:", avatarImg);
+
+      if (avatarImg.type === "cancel") {
+        console.log("Avatar selection cancelled");
+        return setAvatar(null);
+      }
+
+      setAvatar(avatarImg);
+    } catch (error) {
+      console.error("Error selecting avatar:", error);
+    }
+  };
+
   return (
-    <View onLayout={onLayoutRootView} style={container}>
-      <ImageBackground source={backgroundImg} style={bgImg}>
-        <View style={wrapper}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={keyboardAvoidingContainer}
-          >
-            <TouchableWithoutFeedback onPress={handleKeyboardHide}>
+    <TouchableWithoutFeedback onPress={handleKeyboardHide}>
+      <View onLayout={onLayoutRootView} style={container}>
+        <ImageBackground source={backgroundImg} style={bgImg}>
+          <View style={wrapper}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={keyboardAvoidingContainer}
+            >
               <View style={wrapperAuthInput}>
-                <View style={userPhoto}>
-                  <Image
-                    style={iconAdd}
-                    source={require("../assets/img/add.png")}
-                  />
+                <View style={avatarWrapper}>
+                  {avatar && (
+                    <Image
+                      style={avatarUser}
+                      source={{ uri: avatar.assets[0].uri }}
+                    />
+                  )}
+                  <TouchableOpacity
+                    style={avatar ? btnAddAvatarLoad : btnAddAvatar}
+                    onPress={onLoadAvatar}
+                  >
+                    <SvgAddButton
+                      style={avatar ? btnAddAvatarSvgLoad : btnAddAvatarSvg}
+                    />
+                  </TouchableOpacity>
                 </View>
 
                 <Text style={title} allowFontScaling={false}>
@@ -94,14 +160,14 @@ const RegistrationScreen = ({ onLayoutRootView }) => {
                       : "#F6F6F6",
                   }}
                   textContentType="username"
-                  value={state.username}
+                  value={username}
                   onFocus={() => {
-                    handleFocus,
-                      setIsShowKeyboard(true),
-                      setIsFocusInput({
-                        ...isFocusInput,
-                        username: true,
-                      });
+                    handleFocus();
+                    setIsShowKeyboard(true);
+                    setIsFocusInput({
+                      ...isFocusInput,
+                      username: true,
+                    });
                   }}
                   onBlur={() => {
                     setIsFocusInput({
@@ -130,7 +196,8 @@ const RegistrationScreen = ({ onLayoutRootView }) => {
                   }}
                   keyboardType="email-address"
                   textContentType="emailAddress"
-                  value={state.emailAddress}
+                  autoComplete="email"
+                  value={emailAddress}
                   onFocus={() => {
                     handleFocus,
                       setIsShowKeyboard(true),
@@ -166,7 +233,7 @@ const RegistrationScreen = ({ onLayoutRootView }) => {
                       ...passInput,
                     }}
                     textContentType="password"
-                    value={state.password}
+                    value={password}
                     secureTextEntry={isShowPassword}
                     onFocus={() => {
                       handleFocus();
@@ -203,22 +270,25 @@ const RegistrationScreen = ({ onLayoutRootView }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
 
-          {!isShowKeyboard && (
-            <View style={buttonWrapper}>
-              <TouchableOpacity style={buttonAuth}>
-                <Text style={button}>Зареєстуватися</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={buttonAuth}>
-                <Text style={[button, lastButton]}>Вже є акаунт? Увійти</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      </ImageBackground>
-    </View>
+            {!isShowKeyboard && (
+              <View style={buttonWrapper}>
+                <TouchableOpacity
+                  style={buttonAuth}
+                  onPress={handleSubmitUserRegister}
+                >
+                  <Text style={button}>Зареєстуватися</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={buttonAuth}>
+                  <Text style={[button, lastButton]}>Вже є акаунт? Увійти</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
