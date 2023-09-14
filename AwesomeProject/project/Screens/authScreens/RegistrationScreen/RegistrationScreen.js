@@ -1,6 +1,8 @@
 import React from "react";
 
 import { useState } from "react";
+import * as DocumentPicker from "expo-document-picker";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   ImageBackground,
@@ -9,6 +11,7 @@ import {
   TouchableOpacity,
   Text,
   KeyboardAvoidingView,
+  Image,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -18,6 +21,8 @@ import {
   wrapper,
   wrapperAuthInput,
   keyboardAvoidingContainer,
+  avatarUser,
+  avatarWrapper,
   title,
   input,
   lastInput,
@@ -28,9 +33,14 @@ import {
   lastButton,
   buttonWrapper,
   buttonAuth,
-} from "../LoginScreen/LoginScreen.styled";
+  btnAddAvatar,
+  btnAddAvatarLoad,
+  btnAddAvatarSvg,
+  btnAddAvatarSvgLoad,
+} from "../RegistrationScreen/RegistrationScreen.styled";
 
-import backgroundImg from "../assets/img/PhotoBG.jpg";
+import backgroundImg from "../../../assets/img/PhotoBG.jpg";
+import SvgAddButton from "../../../assets/svg/SvgAddButton";
 
 const initialState = {
   username: "",
@@ -38,12 +48,12 @@ const initialState = {
   password: "",
 };
 
-const LoginScreen = ({ onLayoutRootView }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+const RegistrationScreen = ({ onLayoutRootView }) => {
+  const navigation = useNavigation();
 
   const [state, setState] = useState(initialState);
 
-  const { emailAddress, password } = state;
+  const { username, emailAddress, password } = state;
 
   const [isFocusInput, setIsFocusInput] = useState({
     username: false,
@@ -51,8 +61,13 @@ const LoginScreen = ({ onLayoutRootView }) => {
     password: false,
   });
 
-  const [isShowPassword, setIsShowPassword] = useState(true);
   const [isFocusView, setIsFocusView] = useState(false);
+
+  const [avatar, setAvatar] = useState(null);
+
+  const [isShowPassword, setIsShowPassword] = useState(true);
+
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const handleFocus = () => {
     setIsShowKeyboard(true);
@@ -63,12 +78,17 @@ const LoginScreen = ({ onLayoutRootView }) => {
     Keyboard.dismiss();
   };
 
-  const clearUserForm = () => {
-    setState((prevState) => ({ ...prevState, emailAddress: "", password: "" }));
+  const cleanRegisterForm = () => {
+    setState((prevState) => ({
+      ...prevState,
+      username: "",
+      emailAddress: "",
+      password: "",
+    }));
   };
 
-  handleSubmitUserLogin = (initialState) => {
-    if (!emailAddress.trim() || !password.trim()) {
+  const handleSubmitUserRegister = (initialState) => {
+    if (!username.trim() || !emailAddress.trim() || !password.trim()) {
       console.log("Будь ласка заповніть поля");
       return;
     }
@@ -77,9 +97,31 @@ const LoginScreen = ({ onLayoutRootView }) => {
       console.log("Адрес електронної пошти повинен містити символ '@'");
       return;
     }
+    console.log(
+      `username: ${username}, emailAddress: ${emailAddress}, password: ${password}`
+    );
 
-    console.log(`emailAddress:${emailAddress}, password: ${password} `);
-    clearUserForm();
+    cleanRegisterForm();
+  };
+
+  const onLoadAvatar = async () => {
+    console.log("onLoadAvatar started");
+    try {
+      const avatarImg = await DocumentPicker.getDocumentAsync({
+        type: "image/*",
+      });
+
+      console.log("avatarImg:", avatarImg);
+
+      if (avatarImg.type === "cancel") {
+        console.log("Avatar selection cancelled");
+        return setAvatar(null);
+      }
+
+      setAvatar(avatarImg);
+    } catch (error) {
+      console.error("Error selecting avatar:", error);
+    }
   };
 
   return (
@@ -92,9 +134,58 @@ const LoginScreen = ({ onLayoutRootView }) => {
               style={keyboardAvoidingContainer}
             >
               <View style={wrapperAuthInput}>
+                <View style={avatarWrapper}>
+                  {avatar && (
+                    <Image
+                      style={avatarUser}
+                      source={{ uri: avatar.assets[0].uri }}
+                    />
+                  )}
+                  <TouchableOpacity
+                    style={avatar ? btnAddAvatarLoad : btnAddAvatar}
+                    onPress={onLoadAvatar}
+                  >
+                    <SvgAddButton
+                      style={avatar ? btnAddAvatarSvgLoad : btnAddAvatarSvg}
+                    />
+                  </TouchableOpacity>
+                </View>
+
                 <Text style={title} allowFontScaling={false}>
-                  Увійти
+                  Реєстрація
                 </Text>
+                <TextInput
+                  placeholder="Логин"
+                  style={{
+                    ...input,
+                    borderColor: isFocusInput.username ? "#FF6C00" : "#F6F6F6",
+                    backgroundColor: isFocusInput.username
+                      ? "#FFFFFF"
+                      : "#F6F6F6",
+                  }}
+                  textContentType="username"
+                  value={username}
+                  onFocus={() => {
+                    handleFocus();
+                    setIsShowKeyboard(true);
+                    setIsFocusInput({
+                      ...isFocusInput,
+                      username: true,
+                    });
+                  }}
+                  onBlur={() => {
+                    setIsFocusInput({
+                      ...isFocusInput,
+                      username: false,
+                    });
+                  }}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({
+                      ...prevState,
+                      username: value,
+                    }))
+                  }
+                />
 
                 <TextInput
                   placeholder="Адреса електронної пошти"
@@ -112,7 +203,7 @@ const LoginScreen = ({ onLayoutRootView }) => {
                   autoComplete="email"
                   value={emailAddress}
                   onFocus={() => {
-                    handleFocus(),
+                    handleFocus,
                       setIsShowKeyboard(true),
                       setIsFocusInput({
                         ...isFocusInput,
@@ -183,23 +274,29 @@ const LoginScreen = ({ onLayoutRootView }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-
-              {!isShowKeyboard && (
-                <View style={buttonWrapper}>
-                  <TouchableOpacity
-                    style={buttonAuth}
-                    onPress={handleSubmitUserLogin}
-                  >
-                    <Text style={button}>Зареєстуватися</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={buttonAuth}>
-                    <Text style={[button, lastButton]}>
-                      Немає акаунту? Зареєструватися
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
             </KeyboardAvoidingView>
+
+            {!isShowKeyboard && (
+              <View style={buttonWrapper}>
+                <TouchableOpacity
+                  style={buttonAuth}
+                  onPress={() => {
+                    handleSubmitUserRegister();
+                    navigation.navigate("Home");
+                  }}
+                >
+                  <Text style={button}>Зареєстуватися</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={buttonAuth}
+                  onPress={() => {
+                    navigation.navigate("Login");
+                  }}
+                >
+                  <Text style={[button, lastButton]}>Вже є акаунт? Увійти</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </ImageBackground>
       </View>
@@ -207,4 +304,4 @@ const LoginScreen = ({ onLayoutRootView }) => {
   );
 };
 
-export default LoginScreen;
+export default RegistrationScreen;
