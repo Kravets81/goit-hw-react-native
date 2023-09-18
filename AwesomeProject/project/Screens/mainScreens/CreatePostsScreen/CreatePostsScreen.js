@@ -25,6 +25,7 @@ import {
   publishPostButton,
   publishPostButtonTitle,
   deleteButton,
+  locationIcon,
 } from "./CreatePostsScreen.styled";
 
 const CreatePostsScreen = () => {

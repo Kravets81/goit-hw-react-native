@@ -85,6 +85,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
 
+  locationIcon: {},
+
   locationNameInput: {
     width: "94%",
 
@@ -148,4 +150,5 @@ export const {
   publishPostButton,
   publishPostButtonTitle,
   deleteButton,
+  locationIcon,
 } = styles;
