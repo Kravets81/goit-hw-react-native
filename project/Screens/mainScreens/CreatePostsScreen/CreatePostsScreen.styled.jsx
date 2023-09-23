@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginRight: "auto",
   },
 
-  title: {
+  headerTitle: {
     marginLeft: -10,
     marginRight: "auto",
 
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
     marginBottom: 8,
+    position: "relative",
 
     flexDirection: "column",
     alignItems: "center",
@@ -70,7 +71,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
 
     width: "100%",
-    borderColor: "#E8E8E8",
     borderBottomWidth: 1,
   },
 
@@ -107,11 +107,30 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 
+  publishPosActivButton: {
+    paddingVertical: 16,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+  },
+
   publishPostButtonTitle: {
     marginLeft: "auto",
     marginRight: "auto",
 
     color: "#BDBDBD",
+
+    fontFamily: "Roboto",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "400",
+    lineHeight: 18.75,
+  },
+
+  publishPostActivButtonTitle: {
+    marginLeft: "auto",
+    marginRight: "auto",
+
+    color: "#FFFFFF",
 
     fontFamily: "Roboto",
     fontSize: 16,
@@ -133,13 +152,34 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#F6F6F6",
   },
+
+  cameraStyle: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+
+    borderRadius: 8,
+    borderColor: "red",
+  },
+
+  takePhotoContainer: {
+    height: "100%",
+    width: "100%",
+    borderRadius: 8,
+  },
+
+  addPhoto: {
+    position: "absolute",
+    zIndex: 999,
+  },
 });
 
 export const {
   container,
   header,
   navigateIcon,
-  title,
+  headerTitle,
   createPublicationWrapper,
   publicationImg,
   downloadButton,
@@ -148,7 +188,12 @@ export const {
   locationPicker,
   locationNameInput,
   publishPostButton,
+  publishPosActivButton,
   publishPostButtonTitle,
+  publishPostActivButtonTitle,
   deleteButton,
   locationIcon,
+  cameraStyle,
+  takePhotoContainer,
+  addPhoto,
 } = styles;

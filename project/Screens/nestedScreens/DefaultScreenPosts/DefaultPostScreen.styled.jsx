@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
 
   header: {
@@ -46,6 +48,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
   },
 
+  publicationImg: {
+    width: 345,
+    height: 240,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+
   title: {
     marginLeft: "auto",
     marginRight: "auto",
@@ -60,6 +69,21 @@ const styles = StyleSheet.create({
   navigateIcon: {
     marginLeft: -24,
   },
+
+  locationCommentsWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    gap: 64,
+  },
+  commentsContainer: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  locationContainer: {
+    flexDirection: "row",
+    gap: 6,
+  },
 });
 
 export const {
@@ -69,4 +93,8 @@ export const {
   toolbarContainer,
   title,
   navigateIcon,
+  locationCommentsWrapper,
+  commentsContainer,
+  locationContainer,
+  publicationImg,
 } = styles;

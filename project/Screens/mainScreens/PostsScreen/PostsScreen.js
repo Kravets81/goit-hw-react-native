@@ -7,9 +7,9 @@ import MapScreen from "../../nestedScreens/MapScreen/MapScreen";
 
 const NestedScreen = createStackNavigator();
 
-const PostScreen = () => {
+const PostScreen = ({ route }) => {
   return (
-    <NestedScreen.Navigator screenOptions={{ headerShown: false }}>
+    <NestedScreen.Navigator screenOptions={{ headerShown: true }}>
       <NestedScreen.Screen name="DefaultPost" component={DefaultPostScreen} />
       <NestedScreen.Screen name="Comments" component={CommentsScreen} />
       <NestedScreen.Screen name="Map" component={MapScreen} />
